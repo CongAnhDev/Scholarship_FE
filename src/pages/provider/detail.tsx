@@ -12,7 +12,7 @@ import DetailButton from "./buttondetail";
 const ClientProviderDetailPage = (props: any) => {
     const [ProviderDetail, setProviderDetail] = useState<IProvider | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(true)
     const [visible2, setVisible2] = useState(true)
     const [visible3, setVisible3] = useState(false)
     let location = useLocation();
