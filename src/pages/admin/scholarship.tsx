@@ -1,34 +1,32 @@
-import ModalCompany from "@/components/admin/company/modal.company";
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { fetchCompany } from "@/redux/slice/companySlide";
-import { ICompany } from "@/types/backend";
+import { IScholarship } from "@/types/backend";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button, Popconfirm, Space, message, notification } from "antd";
+import { ActionType, ProColumns, ProFormSelect } from '@ant-design/pro-components';
+import { Button, Popconfirm, Select, Space, Tag, message, notification } from "antd";
 import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
-import { callDeleteProvider } from "@/config/api";
+import { callDeleteScholarship } from "@/config/api";
 import queryString from 'query-string';
+import { useNavigate } from "react-router-dom";
+import { fetchScholarship } from "@/redux/slice/scholarshipSlide";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 
-const CompanyPage = () => {
-    const [openModal, setOpenModal] = useState<boolean>(false);
-    const [dataInit, setDataInit] = useState<ICompany | null>(null);
-
+const scholarshipPage = () => {
     const tableRef = useRef<ActionType>();
 
-    const isFetching = useAppSelector(state => state.company.isFetching);
-    const meta = useAppSelector(state => state.company.meta);
-    const companies = useAppSelector(state => state.company.result);
+    const isFetching = useAppSelector(state => state.user.isFetching);
+    const meta = useAppSelector(state => state.scholarship.meta);
+    const scholarships = useAppSelector(state => state.scholarship.result);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
-    const handleDeleteCompany = async (_id: string | undefined) => {
+    const handleDeletescholarship = async (_id: string | undefined) => {
         if (_id) {
-            const res = await callDeleteProvider(_id);
+            const res = await callDeleteScholarship(_id);
             if (res && res.data) {
-                message.success('Xóa Company thành công');
+                message.success('Xóa scholarship thành công');
                 reloadTable();
             } else {
                 notification.error({
@@ -43,7 +41,7 @@ const CompanyPage = () => {
         tableRef?.current?.reload();
     }
 
-    const columns: ProColumns<ICompany>[] = [
+    const columns: ProColumns<IScholarship>[] = [
         {
             title: 'STT',
             key: 'index',
@@ -58,27 +56,49 @@ const CompanyPage = () => {
             hideInSearch: true,
         },
         {
-            title: 'Id',
-            dataIndex: '_id',
-            width: 250,
-            render: (text, record, index, action) => {
-                return (
-                    <span>
-                        {record._id}
-                    </span>
-                )
-            },
-            hideInSearch: true,
-        },
-        {
-            title: 'Name',
+            title: 'Tên scholarship',
             dataIndex: 'name',
             sorter: true,
         },
+        // {
+        //     title: 'Mức lương',
+        //     dataIndex: 'salary',
+        //     sorter: true,
+        //     render(dom, entity, index, action, schema) {
+        //         const str = "" + entity.salary;
+        //         return <>{str?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} đ</>
+        //     },
+        // },
         {
-            title: 'Address',
-            dataIndex: 'address',
-            sorter: true,
+            title: 'Level',
+            dataIndex: 'level',
+            renderFormItem: (item, props, form) => (
+                <ProFormSelect
+                    showSearch
+                    mode="multiple"
+                    allowClear
+                    valueEnum={{
+                        INTERN: 'INTERN',
+                        FRESHER: 'FRESHER',
+                        JUNIOR: 'JUNIOR',
+                        MIDDLE: 'MIDDLE',
+                        SENIOR: 'SENIOR',
+                    }}
+                    placeholder="Chọn level"
+                />
+            ),
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'isActive',
+            render(dom, entity, index, action, schema) {
+                return <>
+                    <Tag color={entity.isActive ? "lime" : "red"} >
+                        {entity.isActive ? "ACTIVE" : "INACTIVE"}
+                    </Tag>
+                </>
+            },
+            hideInSearch: true,
         },
 
         {
@@ -113,11 +133,9 @@ const CompanyPage = () => {
             render: (_value, entity, _index, _action) => (
                 <Space>
                     <Access
-                        permission={ALL_PERMISSIONS.COMPANIES.UPDATE}
+                        permission={ALL_PERMISSIONS.SCHOOLARSHIP.UPDATE}
                         hideChildren
                     >
-
-
                         <EditOutlined
                             style={{
                                 fontSize: 20,
@@ -125,20 +143,19 @@ const CompanyPage = () => {
                             }}
                             type=""
                             onClick={() => {
-                                setOpenModal(true);
-                                setDataInit(entity);
+                                navigate(`/admin/scholarship/upsert?id=${entity._id}`)
                             }}
                         />
                     </Access>
                     <Access
-                        permission={ALL_PERMISSIONS.COMPANIES.DELETE}
+                        permission={ALL_PERMISSIONS.SCHOOLARSHIP.DELETE}
                         hideChildren
                     >
                         <Popconfirm
                             placement="leftTop"
-                            title={"Xác nhận xóa company"}
-                            description={"Bạn có chắc chắn muốn xóa company này ?"}
-                            onConfirm={() => handleDeleteCompany(entity._id)}
+                            title={"Xác nhận xóa scholarship"}
+                            description={"Bạn có chắc chắn muốn xóa scholarship này ?"}
+                            onConfirm={() => handleDeletescholarship(entity._id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
@@ -161,7 +178,10 @@ const CompanyPage = () => {
     const buildQuery = (params: any, sort: any, filter: any) => {
         const clone = { ...params };
         if (clone.name) clone.name = `/${clone.name}/i`;
-        if (clone.address) clone.address = `/${clone.address}/i`;
+        if (clone.salary) clone.salary = `/${clone.salary}/i`;
+        if (clone?.level?.length) {
+            clone.level = clone.level.join(",");
+        }
 
         let temp = queryString.stringify(clone);
 
@@ -169,8 +189,8 @@ const CompanyPage = () => {
         if (sort && sort.name) {
             sortBy = sort.name === 'ascend' ? "sort=name" : "sort=-name";
         }
-        if (sort && sort.address) {
-            sortBy = sort.address === 'ascend' ? "sort=address" : "sort=-address";
+        if (sort && sort.salary) {
+            sortBy = sort.salary === 'ascend' ? "sort=salary" : "sort=-salary";
         }
         if (sort && sort.createdAt) {
             sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
@@ -192,18 +212,18 @@ const CompanyPage = () => {
     return (
         <div>
             <Access
-                permission={ALL_PERMISSIONS.COMPANIES.GET_PAGINATE}
+                permission={ALL_PERMISSIONS.SCHOOLARSHIP.GET_PAGINATE}
             >
-                <DataTable<ICompany>
+                <DataTable<IScholarship>
                     actionRef={tableRef}
-                    headerTitle="Danh sách Công Ty"
+                    headerTitle="Danh sách scholarships"
                     rowKey="_id"
                     loading={isFetching}
                     columns={columns}
-                    dataSource={companies}
+                    dataSource={scholarships}
                     request={async (params, sort, filter): Promise<any> => {
                         const query = buildQuery(params, sort, filter);
-                        dispatch(fetchCompany({ query }))
+                        dispatch(fetchScholarship({ query }))
                     }}
                     scroll={{ x: true }}
                     pagination={
@@ -218,31 +238,19 @@ const CompanyPage = () => {
                     rowSelection={false}
                     toolBarRender={(_action, _rows): any => {
                         return (
-                            <Access
-                                permission={ALL_PERMISSIONS.COMPANIES.CREATE}
-                                hideChildren
+                            <Button
+                                icon={<PlusOutlined />}
+                                type="primary"
+                                onClick={() => navigate('upsert')}
                             >
-                                <Button
-                                    icon={<PlusOutlined />}
-                                    type="primary"
-                                    onClick={() => setOpenModal(true)}
-                                >
-                                    Thêm mới
-                                </Button>
-                            </Access>
+                                Thêm mới
+                            </Button>
                         );
                     }}
                 />
             </Access>
-            <ModalCompany
-                openModal={openModal}
-                setOpenModal={setOpenModal}
-                reloadTable={reloadTable}
-                dataInit={dataInit}
-                setDataInit={setDataInit}
-            />
         </div>
     )
 }
 
-export default CompanyPage;
+export default scholarshipPage;

@@ -1,32 +1,34 @@
+import ModalProvider from "@/components/admin/Provider/modal.provider";
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { IJob } from "@/types/backend";
+import { fetchProvider } from "@/redux/slice/provider.Slide";
+import { IProvider } from "@/types/backend";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { ActionType, ProColumns, ProFormSelect } from '@ant-design/pro-components';
-import { Button, Popconfirm, Select, Space, Tag, message, notification } from "antd";
+import { ActionType, ProColumns } from '@ant-design/pro-components';
+import { Button, Popconfirm, Space, message, notification } from "antd";
 import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
-import { callDeleteJob } from "@/config/api";
+import { callDeleteProvider } from "@/config/api";
 import queryString from 'query-string';
-import { useNavigate } from "react-router-dom";
-import { fetchJob } from "@/redux/slice/jobSlide";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 
-const JobPage = () => {
+const ProviderPage = () => {
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [dataInit, setDataInit] = useState<IProvider | null>(null);
+
     const tableRef = useRef<ActionType>();
 
-    const isFetching = useAppSelector(state => state.job.isFetching);
-    const meta = useAppSelector(state => state.job.meta);
-    const jobs = useAppSelector(state => state.job.result);
+    const isFetching = useAppSelector(state => state.provider.isFetching);
+    const meta = useAppSelector(state => state.provider.meta);
+    const companies = useAppSelector(state => state.provider.result);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
-    const handleDeleteJob = async (_id: string | undefined) => {
+    const handleDeleteProvider = async (_id: string | undefined) => {
         if (_id) {
-            const res = await callDeleteJob(_id);
+            const res = await callDeleteProvider(_id);
             if (res && res.data) {
-                message.success('Xóa Job thành công');
+                message.success('Xóa Provider thành công');
                 reloadTable();
             } else {
                 notification.error({
@@ -41,7 +43,7 @@ const JobPage = () => {
         tableRef?.current?.reload();
     }
 
-    const columns: ProColumns<IJob>[] = [
+    const columns: ProColumns<IProvider>[] = [
         {
             title: 'STT',
             key: 'index',
@@ -56,49 +58,27 @@ const JobPage = () => {
             hideInSearch: true,
         },
         {
-            title: 'Tên Job',
+            title: 'Id',
+            dataIndex: '_id',
+            width: 250,
+            render: (text, record, index, action) => {
+                return (
+                    <span>
+                        {record._id}
+                    </span>
+                )
+            },
+            hideInSearch: true,
+        },
+        {
+            title: 'Name',
             dataIndex: 'name',
             sorter: true,
         },
         {
-            title: 'Mức lương',
-            dataIndex: 'salary',
+            title: 'Address',
+            dataIndex: 'address',
             sorter: true,
-            render(dom, entity, index, action, schema) {
-                const str = "" + entity.salary;
-                return <>{str?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} đ</>
-            },
-        },
-        {
-            title: 'Level',
-            dataIndex: 'level',
-            renderFormItem: (item, props, form) => (
-                <ProFormSelect
-                    showSearch
-                    mode="multiple"
-                    allowClear
-                    valueEnum={{
-                        INTERN: 'INTERN',
-                        FRESHER: 'FRESHER',
-                        JUNIOR: 'JUNIOR',
-                        MIDDLE: 'MIDDLE',
-                        SENIOR: 'SENIOR',
-                    }}
-                    placeholder="Chọn level"
-                />
-            ),
-        },
-        {
-            title: 'Trạng thái',
-            dataIndex: 'isActive',
-            render(dom, entity, index, action, schema) {
-                return <>
-                    <Tag color={entity.isActive ? "lime" : "red"} >
-                        {entity.isActive ? "ACTIVE" : "INACTIVE"}
-                    </Tag>
-                </>
-            },
-            hideInSearch: true,
         },
 
         {
@@ -133,9 +113,11 @@ const JobPage = () => {
             render: (_value, entity, _index, _action) => (
                 <Space>
                     <Access
-                        permission={ALL_PERMISSIONS.JOBS.UPDATE}
+                        permission={ALL_PERMISSIONS.COMPANIES.UPDATE}
                         hideChildren
                     >
+
+
                         <EditOutlined
                             style={{
                                 fontSize: 20,
@@ -143,19 +125,20 @@ const JobPage = () => {
                             }}
                             type=""
                             onClick={() => {
-                                navigate(`/admin/job/upsert?id=${entity._id}`)
+                                setOpenModal(true);
+                                setDataInit(entity);
                             }}
                         />
                     </Access>
                     <Access
-                        permission={ALL_PERMISSIONS.JOBS.DELETE}
+                        permission={ALL_PERMISSIONS.COMPANIES.DELETE}
                         hideChildren
                     >
                         <Popconfirm
                             placement="leftTop"
-                            title={"Xác nhận xóa job"}
-                            description={"Bạn có chắc chắn muốn xóa job này ?"}
-                            onConfirm={() => handleDeleteJob(entity._id)}
+                            title={"Xác nhận xóa Provider"}
+                            description={"Bạn có chắc chắn muốn xóa Provider này ?"}
+                            onConfirm={() => handleDeleteProvider(entity._id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
@@ -178,10 +161,7 @@ const JobPage = () => {
     const buildQuery = (params: any, sort: any, filter: any) => {
         const clone = { ...params };
         if (clone.name) clone.name = `/${clone.name}/i`;
-        if (clone.salary) clone.salary = `/${clone.salary}/i`;
-        if (clone?.level?.length) {
-            clone.level = clone.level.join(",");
-        }
+        if (clone.address) clone.address = `/${clone.address}/i`;
 
         let temp = queryString.stringify(clone);
 
@@ -189,8 +169,8 @@ const JobPage = () => {
         if (sort && sort.name) {
             sortBy = sort.name === 'ascend' ? "sort=name" : "sort=-name";
         }
-        if (sort && sort.salary) {
-            sortBy = sort.salary === 'ascend' ? "sort=salary" : "sort=-salary";
+        if (sort && sort.address) {
+            sortBy = sort.address === 'ascend' ? "sort=address" : "sort=-address";
         }
         if (sort && sort.createdAt) {
             sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
@@ -212,18 +192,18 @@ const JobPage = () => {
     return (
         <div>
             <Access
-                permission={ALL_PERMISSIONS.JOBS.GET_PAGINATE}
+                permission={ALL_PERMISSIONS.COMPANIES.GET_PAGINATE}
             >
-                <DataTable<IJob>
+                <DataTable<IProvider>
                     actionRef={tableRef}
-                    headerTitle="Danh sách Jobs"
+                    headerTitle="Danh sách Công Ty"
                     rowKey="_id"
                     loading={isFetching}
                     columns={columns}
-                    dataSource={jobs}
+                    dataSource={companies}
                     request={async (params, sort, filter): Promise<any> => {
                         const query = buildQuery(params, sort, filter);
-                        dispatch(fetchJob({ query }))
+                        dispatch(fetchProvider({ query }))
                     }}
                     scroll={{ x: true }}
                     pagination={
@@ -238,19 +218,31 @@ const JobPage = () => {
                     rowSelection={false}
                     toolBarRender={(_action, _rows): any => {
                         return (
-                            <Button
-                                icon={<PlusOutlined />}
-                                type="primary"
-                                onClick={() => navigate('upsert')}
+                            <Access
+                                permission={ALL_PERMISSIONS.COMPANIES.CREATE}
+                                hideChildren
                             >
-                                Thêm mới
-                            </Button>
+                                <Button
+                                    icon={<PlusOutlined />}
+                                    type="primary"
+                                    onClick={() => setOpenModal(true)}
+                                >
+                                    Thêm mới
+                                </Button>
+                            </Access>
                         );
                     }}
                 />
             </Access>
+            <ModalProvider
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                reloadTable={reloadTable}
+                dataInit={dataInit}
+                setDataInit={setDataInit}
+            />
         </div>
     )
 }
 
-export default JobPage;
+export default ProviderPage;

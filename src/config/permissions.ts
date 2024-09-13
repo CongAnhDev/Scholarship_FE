@@ -5,11 +5,11 @@ export const ALL_PERMISSIONS = {
         UPDATE: { method: "PATCH", apiPath: '/api/v1/companies/:id', module: "COMPANIES" },
         DELETE: { method: "DELETE", apiPath: '/api/v1/companies/:id', module: "COMPANIES" },
     },
-    JOBS: {
-        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/jobs', module: "JOBS" },
-        CREATE: { method: "POST", apiPath: '/api/v1/jobs', module: "JOBS" },
-        UPDATE: { method: "PATCH", apiPath: '/api/v1/jobs/:id', module: "JOBS" },
-        DELETE: { method: "DELETE", apiPath: '/api/v1/jobs/:id', module: "JOBS" },
+    SCHOOLARSHIP: {
+        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/scholarship', module: "SCHOOLARSHIP" },
+        CREATE: { method: "POST", apiPath: '/api/v1/scholarship', module: "SCHOOLARSHIP" },
+        UPDATE: { method: "PATCH", apiPath: '/api/v1/scholarship/:id', module: "SCHOOLARSHIP" },
+        DELETE: { method: "DELETE", apiPath: '/api/v1/scholarship/:id', module: "SCHOOLARSHIP" },
     },
     PERMISSIONS: {
         GET_PAGINATE: { method: "GET", apiPath: '/api/v1/permissions', module: "PERMISSIONS" },
@@ -41,7 +41,7 @@ export const ALL_MODULES = {
     AUTH: 'AUTH',
     COMPANIES: 'COMPANIES',
     FILES: 'FILES',
-    JOBS: 'JOBS',
+    SCHOOLARSHIP: 'SCHOOLARSHIP',
     PERMISSIONS: 'PERMISSIONS',
     RESUMES: 'RESUMES',
     ROLES: 'ROLES',

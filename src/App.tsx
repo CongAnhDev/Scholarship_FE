@@ -17,19 +17,17 @@ import Footer from 'components/client/footer.client';
 import HomePage from 'pages/home';
 import styles from 'styles/app.module.scss';
 import DashboardPage from './pages/admin/dashboard';
-import CompanyPage from './pages/admin/company';
+import ProviderPage from './pages/admin/provider';
 import PermissionPage from './pages/admin/permission';
 import ResumePage from './pages/admin/resume';
 import RolePage from './pages/admin/role';
 import UserPage from './pages/admin/user';
 import { fetchAccount } from './redux/slice/accountSlide';
 import LayoutApp from './components/share/layout.app';
-import JobPage from './pages/admin/job';
-import ViewUpsertJob from './components/admin/job/upsert.job';
-import ClientJobPage from './pages/job';
-import ClientJobDetailPage from './pages/job/detail';
-import ClientCompanyPage from './pages/company';
-import ClientCompanyDetailPage from './pages/company/detail';
+import ScholarshipPage from './pages/admin/scholarship';
+// import ViewUpsertScholarship from './components/admin/scholarship/upsert.scholarship';
+import ClientScholarshipPage from './pages/scholarship';
+import ClientScholarshipDetailPage from './pages/scholarship/detail';
 import ClientProviderPage from './pages/provider';
 import ClientProviderDetailPage from './pages/provider/detail';
 import HeaderSeconds from 'components/client/headerseconds.client';
@@ -79,8 +77,8 @@ export default function App() {
       errorElement: <NotFound />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: "job", element: <ClientJobPage /> },
-        { path: "job/:id", element: <ClientJobDetailPage /> },
+        { path: "scholarship", element: <ClientScholarshipPage /> },
+        { path: "scholarship/:id", element: <ClientScholarshipDetailPage /> },
         { path: "provider", element: <ClientProviderPage /> },
         { path: "provider/:id", element: <ClientProviderDetailPage /> }
       ],
@@ -101,7 +99,7 @@ export default function App() {
           path: "company",
           element:
             <ProtectedRoute>
-              <CompanyPage />
+              <ProviderPage />
             </ProtectedRoute>
         },
         {
@@ -113,15 +111,16 @@ export default function App() {
         },
 
         {
-          path: "job",
+          path: "scholarship",
           children: [
             {
               index: true,
-              element: <ProtectedRoute> <JobPage /></ProtectedRoute>
+              element: <ProtectedRoute> <ScholarshipPage /></ProtectedRoute>
             },
             {
               path: "upsert", element:
-                <ProtectedRoute><ViewUpsertJob /></ProtectedRoute>
+                // <ProtectedRoute><ViewUpdate /></ProtectedRoute>
+                <ProtectedRoute></ProtectedRoute>
             }
           ]
         },

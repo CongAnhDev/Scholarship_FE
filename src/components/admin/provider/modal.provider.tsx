@@ -7,36 +7,36 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useEffect, useState } from "react";
 import { callCreateProvider, callUpdateProvider, callUploadSingleFile } from "@/config/api";
-import { ICompany } from "@/types/backend";
+import { IProvider } from "@/types/backend";
 import { v4 as uuidv4 } from 'uuid';
 import enUS from 'antd/lib/locale/en_US';
 
 interface IProps {
     openModal: boolean;
     setOpenModal: (v: boolean) => void;
-    dataInit?: ICompany | null;
+    dataInit?: IProvider | null;
     setDataInit: (v: any) => void;
     reloadTable: () => void;
 }
 
-interface ICompanyForm {
+interface IProviderForm {
     name: string;
     address: string;
 }
 
-interface ICompanyLogo {
+interface IProviderLogo {
     name: string;
     uid: string;
 }
 
-const ModalCompany = (props: IProps) => {
+const ModalProvider = (props: IProps) => {
     const { openModal, setOpenModal, reloadTable, dataInit, setDataInit } = props;
 
     //modal animation
     const [animation, setAnimation] = useState<string>('open');
 
     const [loadingUpload, setLoadingUpload] = useState<boolean>(false);
-    const [dataLogo, setDataLogo] = useState<ICompanyLogo[]>([]);
+    const [dataLogo, setDataLogo] = useState<IProviderLogo[]>([]);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -50,7 +50,7 @@ const ModalCompany = (props: IProps) => {
         }
     }, [dataInit])
 
-    const submitCompany = async (valuesForm: ICompanyForm) => {
+    const submitProvider = async (valuesForm: IProviderForm) => {
         const { name, address } = valuesForm;
 
         if (dataLogo.length === 0) {
@@ -62,7 +62,7 @@ const ModalCompany = (props: IProps) => {
             //update
             const res = await callUpdateProvider(dataInit._id, name, address, value, dataLogo[0].name);
             if (res.data) {
-                message.success("Cập nhật company thành công");
+                message.success("Cập nhật Provider thành công");
                 handleReset();
                 reloadTable();
             } else {
@@ -75,7 +75,7 @@ const ModalCompany = (props: IProps) => {
             //create
             const res = await callCreateProvider(name, address, value, dataLogo[0].name);
             if (res.data) {
-                message.success("Thêm mới company thành công");
+                message.success("Thêm mới Provider thành công");
                 handleReset();
                 reloadTable();
             } else {
@@ -149,7 +149,7 @@ const ModalCompany = (props: IProps) => {
     };
 
     const handleUploadFileLogo = async ({ file, onSuccess, onError }: any) => {
-        const res = await callUploadSingleFile(file, "company");
+        const res = await callUploadSingleFile(file, "Provider");
         if (res && res.data) {
             setDataLogo([{
                 name: res.data.fileName,
@@ -171,7 +171,7 @@ const ModalCompany = (props: IProps) => {
             {openModal &&
                 <>
                     <ModalForm
-                        title={<>{dataInit?._id ? "Cập nhật Company" : "Tạo mới Company"}</>}
+                        title={<>{dataInit?._id ? "Cập nhật Provider" : "Tạo mới Provider"}</>}
                         open={openModal}
                         modalProps={{
                             onCancel: () => { handleReset() },
@@ -181,13 +181,13 @@ const ModalCompany = (props: IProps) => {
                             footer: null,
                             keyboard: false,
                             maskClosable: false,
-                            className: `modal-company ${animation}`,
-                            rootClassName: `modal-company-root ${animation}`
+                            className: `modal-Provider ${animation}`,
+                            rootClassName: `modal-Provider-root ${animation}`
                         }}
                         scrollToFirstError={true}
                         preserve={false}
                         form={form}
-                        onFinish={submitCompany}
+                        onFinish={submitProvider}
                         initialValues={dataInit?._id ? dataInit : {}}
                         submitter={{
                             render: (_: any, dom: any) => <FooterToolbar>{dom}</FooterToolbar>,
@@ -242,7 +242,7 @@ const ModalCompany = (props: IProps) => {
                                                             uid: uuidv4(),
                                                             name: dataInit?.logo ?? "",
                                                             status: 'done',
-                                                            url: `${import.meta.env.VITE_BACKEND_URL}/images/company/${dataInit?.logo}`,
+                                                            url: `${import.meta.env.VITE_BACKEND_URL}/images/Provider/${dataInit?.logo}`,
                                                         }
                                                     ] : []
                                             }
@@ -304,4 +304,4 @@ const ModalCompany = (props: IProps) => {
     )
 }
 
-export default ModalCompany;
+export default ModalProvider;

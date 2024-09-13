@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { callFetchProvider } from '@/config/api';
-import { ICompany } from '@/types/backend';
+import { IProvider } from '@/types/backend';
 
 interface IState {
     isFetching: boolean;
@@ -10,11 +10,11 @@ interface IState {
         pages: number;
         total: number;
     },
-    result: ICompany[]
+    result: IProvider[]
 }
 // First, create the thunk
-export const fetchCompany = createAsyncThunk(
-    'company/fetchCompany',
+export const fetchProvider = createAsyncThunk(
+    'Provider/fetchProvider',
     async ({ query }: { query: string }) => {
         const response = await callFetchProvider(query);
         return response;
@@ -34,8 +34,8 @@ const initialState: IState = {
 };
 
 
-export const companySlide = createSlice({
-    name: 'company',
+export const ProviderSlide = createSlice({
+    name: 'Provider',
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
@@ -48,19 +48,19 @@ export const companySlide = createSlice({
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(fetchCompany.pending, (state, action) => {
+        builder.addCase(fetchProvider.pending, (state, action) => {
             state.isFetching = true;
             // Add user to the state array
             // state.courseOrder = action.payload;
         })
 
-        builder.addCase(fetchCompany.rejected, (state, action) => {
+        builder.addCase(fetchProvider.rejected, (state, action) => {
             state.isFetching = false;
             // Add user to the state array
             // state.courseOrder = action.payload;
         })
 
-        builder.addCase(fetchCompany.fulfilled, (state, action) => {
+        builder.addCase(fetchProvider.fulfilled, (state, action) => {
             if (action.payload && action.payload.data) {
                 state.isFetching = false;
                 state.meta = action.payload.data.meta;
@@ -76,6 +76,6 @@ export const companySlide = createSlice({
 
 export const {
     setActiveMenu,
-} = companySlide.actions;
+} = ProviderSlide.actions;
 
-export default companySlide.reducer;
+export default ProviderSlide.reducer;

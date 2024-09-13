@@ -1,4 +1,4 @@
-import { IBackendRes, IProvider, IAccount, IUser, IModelPaginate, IGetAccount, IJob, IResume, IPermission, IRole, ISubscribers } from '@/types/backend';
+import { IBackendRes, IProvider, IAccount, IUser, IModelPaginate, IGetAccount, IScholarship, IResume, IPermission, IRole, ISubscribers } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -92,34 +92,34 @@ export const callFetchUser = (query: string) => {
 
 /**
  * 
-Module Job
+Module Scholarship
  */
-export const callCreateJob = (job: IJob) => {
-    return axios.post<IBackendRes<IJob>>('/api/v1/jobs', { ...job })
+export const callCreateScholarship = (Scholarship: IScholarship) => {
+    return axios.post<IBackendRes<IScholarship>>('/api/v1/scholarship', { ...Scholarship })
 }
 
-export const callUpdateJob = (job: IJob, id: string) => {
-    return axios.patch<IBackendRes<IJob>>(`/api/v1/jobs/${id}`, { ...job })
+export const callUpdateScholarship = (Scholarship: IScholarship, id: string) => {
+    return axios.patch<IBackendRes<IScholarship>>(`/api/v1/scholarship/${id}`, { ...Scholarship })
 }
 
-export const callDeleteJob = (id: string) => {
-    return axios.delete<IBackendRes<IJob>>(`/api/v1/jobs/${id}`);
+export const callDeleteScholarship = (id: string) => {
+    return axios.delete<IBackendRes<IScholarship>>(`/api/v1/scholarship/${id}`);
 }
 
-export const callFetchJob = (query: string) => {
-    return axios.get<IBackendRes<IModelPaginate<IJob>>>(`/api/v1/jobs?${query}`);
+export const callFetchScholarship = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IScholarship>>>(`/api/v1/scholarship?${query}`);
 }
 
-export const callFetchJobById = (id: string) => {
-    return axios.get<IBackendRes<IJob>>(`/api/v1/jobs/${id}`);
+export const callFetchScholarshipById = (id: string) => {
+    return axios.get<IBackendRes<IScholarship>>(`/api/v1/scholarship/${id}`);
 }
 
 /**
  * 
 Module Resume
  */
-export const callCreateResume = (url: string, ProviderId: any, jobId: any) => {
-    return axios.post<IBackendRes<IResume>>('/api/v1/resumes', { url, ProviderId, jobId })
+export const callCreateResume = (url: string, ProviderId: any, ScholarshipId: any) => {
+    return axios.post<IBackendRes<IResume>>('/api/v1/resumes', { url, ProviderId, ScholarshipId })
 }
 
 export const callUpdateResumeStatus = (id: any, status: string) => {

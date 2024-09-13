@@ -2,7 +2,7 @@ import { Divider } from 'antd';
 import styles from 'styles/client.module.scss';
 import SearchClient from '@/components/client/search.client';
 
-import JobCard from '@/components/client/card/job.card';
+import ScholarshipCard from '@/components/client/card/scholarship.card';
 import BackGroundImg from '@/components/client/card/background.card';
 import Introduce from '@/components/client/card/introduce.card';
 import ProviderCard from '@/components/client/card/provider.card';
@@ -21,7 +21,7 @@ const HomePage = () => {
             <ProviderCard />
             <div style={{ margin: 50 }}></div>
             <Divider />
-            <JobCard />
+            <ScholarshipCard />
         </div>
     </div>
     )

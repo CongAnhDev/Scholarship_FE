@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { callFetchJob } from '@/config/api';
-import { IJob } from '@/types/backend';
+import { callFetchScholarship } from '@/config/api';
+import { IScholarship } from '@/types/backend';
 
 interface IState {
     isFetching: boolean;
@@ -10,13 +10,13 @@ interface IState {
         pages: number;
         total: number;
     },
-    result: IJob[]
+    result: IScholarship[]
 }
 // First, create the thunk
-export const fetchJob = createAsyncThunk(
-    'job/fetchJob',
+export const fetchScholarship = createAsyncThunk(
+    'scholarship/fetchScholarship',
     async ({ query }: { query: string }) => {
-        const response = await callFetchJob(query);
+        const response = await callFetchScholarship(query);
         return response;
     }
 )
@@ -34,8 +34,8 @@ const initialState: IState = {
 };
 
 
-export const jobSlide = createSlice({
-    name: 'job',
+export const scholarshipSlide = createSlice({
+    name: 'scholarship',
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
@@ -48,19 +48,19 @@ export const jobSlide = createSlice({
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(fetchJob.pending, (state, action) => {
+        builder.addCase(fetchScholarship.pending, (state, action) => {
             state.isFetching = true;
             // Add user to the state array
             // state.courseOrder = action.payload;
         })
 
-        builder.addCase(fetchJob.rejected, (state, action) => {
+        builder.addCase(fetchScholarship.rejected, (state, action) => {
             state.isFetching = false;
             // Add user to the state array
             // state.courseOrder = action.payload;
         })
 
-        builder.addCase(fetchJob.fulfilled, (state, action) => {
+        builder.addCase(fetchScholarship.fulfilled, (state, action) => {
             if (action.payload && action.payload.data) {
                 state.isFetching = false;
                 state.meta = action.payload.data.meta;
@@ -76,6 +76,6 @@ export const jobSlide = createSlice({
 
 export const {
     setActiveMenu,
-} = jobSlide.actions;
+} = scholarshipSlide.actions;
 
-export default jobSlide.reducer;
+export default scholarshipSlide.reducer;

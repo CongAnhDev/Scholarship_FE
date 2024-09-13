@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/redux/hooks";
-import { IJob } from "@/types/backend";
+import { IScholarship } from "@/types/backend";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { Button, Col, ConfigProvider, Divider, Modal, Row, Upload, message, notification } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +12,11 @@ import { useState } from 'react';
 interface IProps {
     isModalOpen: boolean;
     setIsModalOpen: (v: boolean) => void;
-    jobDetail: IJob | null;
+    ScholarshipDetail: IScholarship | null;
 }
 
 const ApplyModal = (props: IProps) => {
-    const { isModalOpen, setIsModalOpen, jobDetail } = props;
+    const { isModalOpen, setIsModalOpen, ScholarshipDetail } = props;
     const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
     const user = useAppSelector(state => state.account.user);
     const [urlCV, setUrlCV] = useState<string>("");
@@ -35,8 +35,8 @@ const ApplyModal = (props: IProps) => {
         }
         else {
             //todo
-            if (jobDetail) {
-                const res = await callCreateResume(urlCV, jobDetail?.company?._id, jobDetail?._id);
+            if (ScholarshipDetail) {
+                const res = await callCreateResume(urlCV, ScholarshipDetail?.provider?._id, ScholarshipDetail?._id);
                 if (res.data) {
                     message.success("Rải CV thành công!");
                     setIsModalOpen(false);
@@ -82,7 +82,7 @@ const ApplyModal = (props: IProps) => {
 
     return (
         <>
-            <Modal title="Ứng Tuyển Job"
+            <Modal title="Ứng Tuyển Scholarship"
                 open={isModalOpen}
                 onOk={() => handleOkButton()}
                 onCancel={() => setIsModalOpen(false)}
@@ -105,7 +105,7 @@ const ApplyModal = (props: IProps) => {
                                 <Row gutter={[10, 10]}>
                                     <Col span={24}>
                                         <div>
-                                            Bạn đang ứng tuyển công việc <b>{jobDetail?.name} </b>tại  <b>{jobDetail?.company?.name}</b>
+                                            Bạn đang ứng tuyển công việc <b>{ScholarshipDetail?.name} </b>tại  <b>{ScholarshipDetail?.provider?.name}</b>
                                         </div>
                                     </Col>
                                     <Col span={24}>

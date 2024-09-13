@@ -11,9 +11,9 @@
     }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 960px) {
     .container {
-        width: 970px;
+        width: 960px;
     }
 }
 
@@ -180,7 +180,7 @@
         color: white;
     }
 }
-.card-job-section {
+.card-Scholarship-section {
     .empty {
         display: flex;
         justify-content: center;
@@ -200,13 +200,13 @@
         justify-content: space-between;
     }
 
-    .job-content {
-        .card-job-content {
+    .Scholarship-content {
+        .card-Scholarship-content {
             display: flex;
             width: 100%;
             gap: 10px;
 
-            .card-job-left {
+            .card-Scholarship-left {
                 width: 70px;
                 margin: 0 auto;
 
@@ -216,10 +216,10 @@
                 }
             }
 
-            .card-job-right {
+            .card-Scholarship-right {
                 width: 100%;
 
-                .job-title {
+                .Scholarship-title {
                     overflow: hidden;
                     color: #353535;
                     font-weight: 600;
@@ -234,11 +234,11 @@
                     -webkit-box-orient: vertical;
                 }
 
-                .job-location {
+                .Scholarship-location {
                     padding-bottom: 5px;
                 }
 
-                .job-updatedAt {
+                .Scholarship-updatedAt {
                     display: block;
                     float: right;
                     color: #919191;
@@ -308,7 +308,7 @@
     }
 }
 
-.detail-job-section {
+.detail-scholarship-section {
     .header {
         margin: 20px 0;
         color: #353535;

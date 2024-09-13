@@ -51,8 +51,8 @@ const LayoutAdmin = () => {
             )
 
             const viewJob = permissions.find(item =>
-                item.apiPath === ALL_PERMISSIONS.JOBS.GET_PAGINATE.apiPath
-                && item.method === ALL_PERMISSIONS.JOBS.GET_PAGINATE.method
+                item.apiPath === ALL_PERMISSIONS.SCHOOLARSHIP.GET_PAGINATE.apiPath
+                && item.method === ALL_PERMISSIONS.SCHOOLARSHIP.GET_PAGINATE.method
             )
 
             const viewResume = permissions.find(item =>

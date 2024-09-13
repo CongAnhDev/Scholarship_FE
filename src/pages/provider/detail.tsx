@@ -3,9 +3,7 @@ import { useState, useEffect } from 'react';
 import { IProvider } from "@/types/backend";
 import { callFetchProviderById } from "@/config/api";
 import styles from 'styles/client.module.scss';
-import parse from 'html-react-parser';
 import { Col, Divider, Row, Skeleton } from "antd";
-import { EnvironmentOutlined } from "@ant-design/icons";
 import DetailButton from "./buttondetail";
 
 
@@ -40,20 +38,20 @@ const ClientProviderDetailPage = (props: any) => {
                 <Row gutter={[20, 20]}>
                     {ProviderDetail && ProviderDetail._id &&
                         <>
-                        <div>
-                            <Row gutter={[10, 10]} className={styles["custom-row"]}>
-                                <div style={{ paddingTop: '30px' }}></div>
-                                <Col span={8}><img
-                                    alt="example"
-                                    src={`${import.meta.env.VITE_BACKEND_URL}/images/Provider/${ProviderDetail?.logo}`}
-                                    style={{ width: '250px', height: '150px', objectFit: 'cover' }}
-                                /></Col>
-                                <Col span={16} style={{ color: '#353535', fontSize: '27px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, paddingLeft:'20px' }}><div>
-                                    {ProviderDetail.name}
-                                </div></Col>
+                            <div>
+                                <Row gutter={[10, 10]} className={styles["custom-row"]}>
+                                    <div style={{ paddingTop: '30px' }}></div>
+                                    <Col span={8}><img
+                                        alt="example"
+                                        src={`${import.meta.env.VITE_BACKEND_URL}/images/Provider/${ProviderDetail?.logo}`}
+                                        style={{ width: '250px', height: '150px', objectFit: 'cover' }}
+                                    /></Col>
+                                    <Col span={16} style={{ color: '#353535', fontSize: '27px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, paddingLeft: '20px' }}><div>
+                                        {ProviderDetail.name}
+                                    </div></Col>
 
-                            </Row>
-                            <DetailButton />
+                                </Row>
+                                <DetailButton />
                             </div>
                             <div style={{ paddingTop: '30px' }}>
                                 <div
@@ -340,22 +338,22 @@ const ClientProviderDetailPage = (props: any) => {
                                         </button>
                                     </h3>
                                     {visible2 && (
-                                                   <div>
-                                                   {ProviderDetail.gallery.length === 1 ? (
-                                                       <img src={ProviderDetail.gallery[0]} alt="Single Image" style={{ width: '100%', height: 'auto' }} />
-                                                   ) : (
-                                                       <div>
-                                                           {ProviderDetail.gallery.map((image: string, index: number) => (
-                                                               <img
-                                                                   key={index}
-                                                                   src={`${import.meta.env.VITE_BACKEND_URL}/images/gallery/`+image}
-                                                                   alt={`Image ${index + 1}`}
-                                                                   style={{ width: '25%', height: 'auto', maxWidth: '300px', maxHeight: '200px', margin: '5px' }}
-                                                               />
-                                                           ))}
-                                                       </div>
-                                                   )}
-                                               </div>
+                                        <div>
+                                            {ProviderDetail.gallery.length === 1 ? (
+                                                <img src={ProviderDetail.gallery[0]} alt="Single Image" style={{ width: '100%', height: 'auto' }} />
+                                            ) : (
+                                                <div>
+                                                    {ProviderDetail.gallery.map((image: string, index: number) => (
+                                                        <img
+                                                            key={index}
+                                                            src={`${import.meta.env.VITE_BACKEND_URL}/images/gallery/` + image}
+                                                            alt={`Image ${index + 1}`}
+                                                            style={{ width: '25%', height: 'auto', maxWidth: '300px', maxHeight: '200px', margin: '5px' }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     )}
                                     <h3
                                         className="text-para c-md:text-heading-5 flex py-[20px] c-md:py-[24px] border-b font-custom-regular accordion-heading border-transparent"
@@ -444,13 +442,13 @@ const ClientProviderDetailPage = (props: any) => {
                                         </button>
                                     </h3>
                                     {visible && (
-                                            <div>
-                                                {/* Nội dung cần collapse */}
-                                                <p>{ProviderDetail?.description}</p>
-                                            </div>
+                                        <div>
+                                            {/* Nội dung cần collapse */}
+                                            <p>{ProviderDetail?.description}</p>
+                                        </div>
                                     )}
 
-<h3
+                                    <h3
                                         className="text-para c-md:text-heading-5 flex py-[20px] c-md:py-[24px] border-b font-custom-regular accordion-heading border-transparent"
                                         style={{
                                             border: "0px solid rgb(229, 231, 235)",
@@ -537,9 +535,9 @@ const ClientProviderDetailPage = (props: any) => {
                                         </button>
                                     </h3>
                                     {visible3 && (
-                                                   <div>
-                                                   <p>{ProviderDetail.info}</p>
-                                               </div>
+                                        <div>
+                                            <p>{ProviderDetail.info}</p>
+                                        </div>
                                     )}
 
                                 </div>

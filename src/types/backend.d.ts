@@ -37,18 +37,6 @@ export interface IAccount {
 
 export interface IGetAccount extends Omit<IAccount, "access_token"> { }
 
-export interface ICompany {
-    _id?: string;
-    name?: string;
-    address?: string;
-    logo: string;
-    description?: string;
-    createdBy?: string;
-    isDeleted?: boolean;
-    deletedAt?: boolean | null;
-    createdAt?: string;
-    updatedAt?: string;
-}
 export interface IProvider {
     _id?: string;
     name?: string;
@@ -93,25 +81,32 @@ export interface IUser {
     updatedAt?: string;
 }
 
-export interface IJob {
+export interface IScholarship {
     _id?: string;
     name: string;
-    skills: string[];
-    company?: {
-        _id: string;
-        name: string;
-        logo?: string;
-    }
+    fundingMethod: string;
     location: string;
-    salary: number;
+    subject: string[];
+    level: string[];
+    value: [];
     quantity: number;
-    level: string;
     description: string;
+    requirement: string;
+    register: string;
+    type: string;
     startDate: Date;
     endDate: Date;
     isActive: boolean;
-
-    createdBy?: string;
+    provider: {
+        _id: string;
+        name: string;
+        logo?: string;
+        background: string;
+    },
+    createdBy: {
+        _id: string;
+        email: string;
+    },
     isDeleted?: boolean;
     deletedAt?: boolean | null;
     createdAt?: string;

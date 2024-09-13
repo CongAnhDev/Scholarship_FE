@@ -9,7 +9,7 @@ import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 import { callDeleteUser } from "@/config/api";
 import queryString from 'query-string';
-import ModalUser from "@/components/admin/user/modal.user";
+// import ModalUser from "@/components/admin/user/modal.user";
 import ViewDetailUser from "@/components/admin/user/view.user";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
@@ -221,13 +221,13 @@ const UserPage = () => {
                     }}
                 />
             </Access>
-            <ModalUser
+            {/* <ModalUser
                 openModal={openModal}
                 setOpenModal={setOpenModal}
                 reloadTable={reloadTable}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
-            />
+            /> */}
             <ViewDetailUser
                 onClose={setOpenViewDetail}
                 open={openViewDetail}

@@ -497,34 +497,6 @@ export default function Component() {
           </button>
         </section>
       </div>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-html {
-  border: 0px solid rgb(229, 231, 235);
-  box-sizing: border-box;
-  line-height: 1.5;
-  text-size-adjust: 100%;
-  tab-size: 4;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-feature-settings: normal;
-  font-variation-settings: normal;
-}
-
-body {
-  border: 0px solid rgb(229, 231, 235);
-  box-sizing: border-box;
-  margin: 0px;
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgb(28 31 42/1);
-  font-family: BuenosAiresVN, sans-serif;
-  font-weight: 300;
-  overflow: auto;
-}
-`,
-        }}
-      />
     </>
   );
 }
