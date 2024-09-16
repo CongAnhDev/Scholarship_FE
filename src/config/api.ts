@@ -113,6 +113,9 @@ export const callFetchScholarship = (query: string) => {
 export const callFetchScholarshipById = (id: string) => {
     return axios.get<IBackendRes<IScholarship>>(`/api/v1/scholarship/${id}`);
 }
+export const callFetchScholarshipofProvider = (id: string) => {
+    return axios.get<IBackendRes<IScholarship>>(`/api/v1/scholarship/search-list-scholarship?id=${id}`);
+}
 
 /**
  * 

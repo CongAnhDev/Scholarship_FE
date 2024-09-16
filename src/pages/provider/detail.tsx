@@ -1,19 +1,25 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { IProvider } from "@/types/backend";
+import { LOCATION_LIST, convertSlug, getLocationName } from '@/config/utils';
+import { IProvider,IScholarship } from "@/types/backend";
 import { callFetchProviderById } from "@/config/api";
+import { EnvironmentOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { callFetchScholarshipofProvider} from "@/config/api";
 import styles from 'styles/client.module.scss';
-import { Col, Divider, Row, Skeleton } from "antd";
+import { Card,Col, Divider, Row, Skeleton } from "antd";
 import DetailButton from "./buttondetail";
 
 
 const ClientProviderDetailPage = (props: any) => {
     const [ProviderDetail, setProviderDetail] = useState<IProvider | null>(null);
+    const [Scholarship, setScholarship] = useState<IScholarship[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [visible, setVisible] = useState(true)
     const [visible2, setVisible2] = useState(true)
     const [visible3, setVisible3] = useState(false)
+    const [visible4, setVisible4] = useState(false)
     let location = useLocation();
+    const navigate = useNavigate();
     let params = new URLSearchParams(location.search);
     const id = params?.get("id"); // job id
 
@@ -30,6 +36,26 @@ const ClientProviderDetailPage = (props: any) => {
         }
         init();
     }, [id]);
+
+    useEffect(() => {
+        const detailscholar = async () => {
+            if (id) {
+                setIsLoading(true)
+                const res = await callFetchScholarshipofProvider(id);
+                if (res?.data && Array.isArray(res.data)) {
+                    setScholarship(res.data);
+                    console.log("data ne",res.data)
+                }
+                setIsLoading(false)
+            }
+        }
+        detailscholar();
+    }, [id]);
+    const handleViewDetailScholarship = (item: IScholarship) => {
+        const slug = convertSlug(item.name);
+        
+        navigate(`/Scholarship/${slug}?id=${item._id}`)
+    }
     return (
         <div className={`${styles["container"]} ${styles["detail-job-section"]}`}>
             {isLoading ?
@@ -536,10 +562,214 @@ const ClientProviderDetailPage = (props: any) => {
                                     </h3>
                                     {visible3 && (
                                         <div>
+                                            <p>{ProviderDetail.part}</p>
+                                        </div>
+                                    )}
+
+<h3
+                                        className="text-para c-md:text-heading-5 flex py-[20px] c-md:py-[24px] border-b font-custom-regular accordion-heading border-transparent"
+                                        style={{
+                                            border: "0px solid rgb(229, 231, 235)",
+                                            boxSizing: "border-box",
+                                            margin: "0px",
+                                            display: "flex",
+                                            borderBottomWidth: "1px",
+                                            borderColor: "rgba(0, 0, 0, 0)",
+                                            paddingTop: "24px",
+                                            paddingBottom: "24px",
+                                            fontSize: "20px",
+                                            lineHeight: 1.3,
+                                            fontFamily: "BuenosAiresVN, sans-serif",
+                                            fontWeight: 400,
+                                        }}
+                                    >
+                                        <button
+                                            className="flex w-full gap-[8px]"
+                                            aria-label="Collapse Tổng quan "
+                                            onClick={() => setVisible3(!visible3)}
+                                            aria-expanded={visible3}
+                                            aria-controls="collapseWidthExample"
+                                            style={{
+                                                border: "0px solid rgb(229, 231, 235)",
+                                                boxSizing: "border-box",
+                                                margin: "0px",
+                                                padding: "0px",
+                                                fontSize: "100%",
+                                                lineHeight: "inherit",
+                                                color: "inherit",
+                                                textTransform: "none",
+                                                appearance: "button",
+                                                backgroundColor: "initial",
+                                                backgroundImage: "none",
+                                                cursor: "pointer",
+                                                fontFamily: "BuenosAiresVN, sans-serif",
+                                                fontWeight: 400,
+                                                display: "flex",
+                                                width: "100%",
+                                                gap: "8px",
+                                            }}
+                                        >
+                                            <span
+                                                className="flex-1 text-left"
+                                                style={{
+                                                    border: "0px solid rgb(229, 231, 235)",
+                                                    boxSizing: "border-box",
+                                                    flex: "1 1 0%",
+                                                    textAlign: "left",
+                                                }}
+                                            >
+                                                Thông Tin Thêm
+                                            </span>
+                                            <svg
+                                                className="relative top-[3px]"
+                                                height="1em"
+                                                width="1em"
+                                                fill="currentColor"
+                                                stroke="currentColor"
+                                                strokeWidth="0"
+                                                viewBox="0 0 512 512"
+                                                xmlns="http://www.w3.org/2000/svg"
+
+                                                style={{
+                                                    border: "0px solid rgb(229, 231, 235)",
+                                                    boxSizing: "border-box",
+                                                    display: "block",
+                                                    verticalAlign: "middle",
+                                                    position: "relative",
+                                                    top: "3px",
+                                                    transform: visible3 ? 'rotate(0deg)' : 'rotate(-90deg)',
+                                                    transition: 'transform 0.3s ease',
+                                                }}
+                                            >
+                                                <path
+                                                    d="M96 235h320v42H96z"
+                                                    style={{
+                                                        border: "0px solid rgb(229, 231, 235)",
+                                                        boxSizing: "border-box",
+                                                    }}
+                                                />
+
+                                            </svg>
+                                        </button>
+                                    </h3>
+                                    {visible3 && (
+                                        <div>
                                             <p>{ProviderDetail.info}</p>
                                         </div>
                                     )}
 
+<h3
+                                        className="text-para c-md:text-heading-5 flex py-[20px] c-md:py-[24px] border-b font-custom-regular accordion-heading border-transparent"
+                                        style={{
+                                            border: "0px solid rgb(229, 231, 235)",
+                                            boxSizing: "border-box",
+                                            margin: "0px",
+                                            display: "flex",
+                                            borderBottomWidth: "1px",
+                                            borderColor: "rgba(0, 0, 0, 0)",
+                                            paddingTop: "24px",
+                                            paddingBottom: "24px",
+                                            fontSize: "20px",
+                                            lineHeight: 1.3,
+                                            fontFamily: "BuenosAiresVN, sans-serif",
+                                            fontWeight: 400,
+                                        }}
+                                    >
+                                        <button
+                                            className="flex w-full gap-[8px]"
+                                            aria-label="Collapse Tổng quan "
+                                            onClick={() => setVisible4(!visible4)}
+                                            aria-expanded={visible4}
+                                            aria-controls="collapseWidthExample"
+                                            style={{
+                                                border: "0px solid rgb(229, 231, 235)",
+                                                boxSizing: "border-box",
+                                                margin: "0px",
+                                                padding: "0px",
+                                                fontSize: "100%",
+                                                lineHeight: "inherit",
+                                                color: "inherit",
+                                                textTransform: "none",
+                                                appearance: "button",
+                                                backgroundColor: "initial",
+                                                backgroundImage: "none",
+                                                cursor: "pointer",
+                                                fontFamily: "BuenosAiresVN, sans-serif",
+                                                fontWeight: 400,
+                                                display: "flex",
+                                                width: "100%",
+                                                gap: "8px",
+                                            }}
+                                        >
+                                            <span
+                                                className="flex-1 text-left"
+                                                style={{
+                                                    border: "0px solid rgb(229, 231, 235)",
+                                                    boxSizing: "border-box",
+                                                    flex: "1 1 0%",
+                                                    textAlign: "left",
+                                                }}
+                                            >
+                                                Học bổng hiện có
+                                            </span>
+                                            <svg
+                                                className="relative top-[3px]"
+                                                height="1em"
+                                                width="1em"
+                                                fill="currentColor"
+                                                stroke="currentColor"
+                                                strokeWidth="0"
+                                                viewBox="0 0 512 512"
+                                                xmlns="http://www.w3.org/2000/svg"
+
+                                                style={{
+                                                    border: "0px solid rgb(229, 231, 235)",
+                                                    boxSizing: "border-box",
+                                                    display: "block",
+                                                    verticalAlign: "middle",
+                                                    position: "relative",
+                                                    top: "3px",
+                                                    transform: visible4 ? 'rotate(0deg)' : 'rotate(-90deg)',
+                                                    transition: 'transform 0.3s ease',
+                                                }}
+                                            >
+                                                <path
+                                                    d="M96 235h320v42H96z"
+                                                    style={{
+                                                        border: "0px solid rgb(229, 231, 235)",
+                                                        boxSizing: "border-box",
+                                                    }}
+                                                />
+
+                                            </svg>
+                                        </button>
+                                    </h3>
+                                    {visible4 && (
+                                        Scholarship && Scholarship.map(item => (
+                                            <Col span={24} md={12} key={item._id}>
+                                                <Card size="small" title={null} hoverable onClick={() => handleViewDetailScholarship(item)}>
+                                                    <div className={styles["card-Scholarship-content"]}>
+                                                        <div className={styles["card-Scholarship-left"]}>
+                                                            <img
+                                                                alt="example"
+                                                                src={`${import.meta.env.VITE_BACKEND_URL}/images/Provider/${item?.provider?.logo}`}
+                                                                style={{width:'70px',height:'70px'}}
+                                                            />
+                                                        </div>
+                                                        <div className={styles["card-Scholarship-right"]}>
+                                                            <div className={styles["Scholarship-title"]} style={{fontWeight:600}}>{item.name}</div>
+                                                            <div className={styles["Scholarship-location"]}>
+                                                                <EnvironmentOutlined style={{ color: '#58aaab' }} /> {item.location}
+                                                            </div>
+                                                            <div>
+                                                                <ThunderboltOutlined style={{ color: 'orange' }} /> {item.level?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Card>
+                                            </Col>
+                                        ))
+                                    )}
                                 </div>
                             </div>
                         </>

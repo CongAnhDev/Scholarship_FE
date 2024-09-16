@@ -94,8 +94,8 @@ export interface IScholarship {
     requirement: string;
     register: string;
     type: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     isActive: boolean;
     provider: {
         _id: string;

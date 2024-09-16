@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { convertSlug } from '@/config/utils';
 import { IScholarship } from "@/types/backend";
 import { callFetchScholarshipById } from "@/config/api";
 import styles from 'styles/client.module.scss';
-import {Row, Skeleton} from "antd";
+import { Row, Skeleton } from "antd";
 import dayjs from 'dayjs';
 
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -18,25 +19,32 @@ const ClientScholarshipDetailPage = (props: any) => {
     const [visible2, setVisible2] = useState(true)
     const [visible3, setVisible3] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+    const navigate = useNavigate();
     let location = useLocation();
     let params = new URLSearchParams(location.search);
     const id = params?.get("id"); // scholarship id
-
     useEffect(() => {
         const init = async () => {
             if (id) {
-                setIsLoading(true)
                 const res = await callFetchScholarshipById(id);
                 if (res?.data) {
-                    setScholarshipDetail(res.data)
+                    const data = res.data;
+                    const endDate = new Date(data.endDate);
+
+                    const formattedEndDate = endDate.toLocaleDateString('en-GB');
+                    data.endDate = formattedEndDate;
+                    setScholarshipDetail(data);
                 }
-                setIsLoading(false)
+                setIsLoading(false);
             }
         }
         init();
     }, [id]);
+    const handleClickDetail = (item: IScholarship) => {
+        const slug = convertSlug(item.provider.name);
 
+        navigate(`/Provider/${slug}?id=${item.provider._id}`)
+    }
     return (
         <div>
             <div
@@ -321,7 +329,11 @@ const ClientScholarshipDetailPage = (props: any) => {
                             </div>
                             <a
                                 className="text-white c-lg:line-clamp-3 line-clamp-5"
-                                href="#"
+                                onClick={() => {
+                                    if (scholarshipDetail) {
+                                        handleClickDetail(scholarshipDetail);
+                                    }
+                                }}
                                 style={{
                                     textDecoration: "none",
                                     border: "0px solid rgb(229, 231, 235)",
@@ -337,10 +349,10 @@ const ClientScholarshipDetailPage = (props: any) => {
                                     WebkitLineClamp: "3",
                                 }}
                             >
-                                {scholarshipDetail?.name} &gt;
+                                {scholarshipDetail?.provider.name} &gt;
                             </a>
                             {/* <span>
-                {scholarshipDetail?.provider.name}
+                
               </span> */}
                             <div
                                 className="flex w-full gap-[20px] mt-[16px] c-md:mt-[32px]"
@@ -505,7 +517,7 @@ const ClientScholarshipDetailPage = (props: any) => {
                                         gridTemplateColumns: "repeat(2, minmax(0px, 1fr))",
                                         flexDirection: "row",
                                         flexWrap: "wrap",
-                                        justifyContent: "space-between",
+                                        // justifyContent: "space-between",
                                         display: "flex",
                                         gap: "40px",
                                         paddingLeft: "0px",
@@ -684,7 +696,7 @@ const ClientScholarshipDetailPage = (props: any) => {
                                                 lineHeight: 1.3,
                                             }}
                                         >
-                                            28 Dec 2025
+                                            {scholarshipDetail.endDate}
                                         </p>
                                     </div>
                                     <div
@@ -719,7 +731,45 @@ const ClientScholarshipDetailPage = (props: any) => {
                                                 lineHeight: 1.3,
                                             }}
                                         >
-                                            Không được chỉ định
+                                            {scholarshipDetail.value
+                                                .sort((a, b) => a - b)
+                                                .map(value => `${value}%`)
+                                                .join('-')}
+                                        </p>
+                                    </div>
+                                    <div
+                                        className="flex flex-col"
+                                        style={{
+                                            border: "0px solid rgb(229, 231, 235)",
+                                            boxSizing: "border-box",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                        }}
+                                    >
+                                        <p
+                                            className="block mb-[4px] c-lg:mb-[8px] font-semibold"
+                                            style={{
+                                                border: "0px solid rgb(229, 231, 235)",
+                                                boxSizing: "border-box",
+                                                margin: "0px",
+                                                display: "block",
+                                                fontWeight: 600,
+                                                marginBottom: "8px",
+                                            }}
+                                        >
+                                            Số Lượng Học Bổng
+                                        </p>
+                                        <p
+                                            className="text-heading-6"
+                                            style={{
+                                                border: "0px solid rgb(229, 231, 235)",
+                                                boxSizing: "border-box",
+                                                margin: "0px",
+                                                fontSize: "18px",
+                                                lineHeight: 1.3,
+                                            }}
+                                        >
+                                            {scholarshipDetail.quantity}
                                         </p>
                                     </div>
                                 </div>
@@ -859,494 +909,8 @@ const ClientScholarshipDetailPage = (props: any) => {
                             </button>
                         </h3>
                         {visible2 && (
-                            <div
-                                className="border-b border-neutral-3 text-para pb-[32px] faq-content rich-text-format rtf-cont-idp"
-                                style={{
-                                    border: "0px solid rgb(229, 231, 235)",
-                                    boxSizing: "border-box",
-                                    // borderBottomWidth: "1px",
-                                    // borderColor: "rgb(217 217 214/1)",
-                                    //  paddingBottom: "32px",
-                                    paddingTop: "30px",
-                                    fontSize: "16px",
-                                    lineHeight: 1.5,
-                                }}
-                            >
-                                <div
-                                    className="flex gap-[16px] flex-wrap justify-between mb-[20px] c-md:mb-[40px]"
-                                    style={{
-                                        border: "0px solid rgb(229, 231, 235)",
-                                        boxSizing: "border-box",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-between",
-                                        gap: "16px",
-                                        marginBottom: "40px",
-                                    }}
-                                >
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Trường cung cấp học bổng
-                                        </p>
-                                        <a
-                                            className="font-custom-regular hover:underline"
-                                            href=""
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                textDecoration: "inherit",
-                                                cursor: "pointer",
-                                                color: "rgb(8 116 231/1)",
-                                                textDecorationLine: "none",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 400,
-                                            }}
-                                        >
-                                            {scholarshipDetail?.provider.name}
-                                        </a>
-                                    </div>
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Số hồ sơ ứng tuyển trung bình mỗi năm
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            Không được chỉ định
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex gap-[16px] flex-wrap justify-between mb-[20px] c-md:mb-[40px]"
-                                    style={{
-                                        border: "0px solid rgb(229, 231, 235)",
-                                        boxSizing: "border-box",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-between",
-                                        gap: "16px",
-                                        marginBottom: "40px",
-                                    }}
-                                >
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Trình độ chuyên môn
-                                        </p>
-                                        {scholarshipDetail?.level.join(',')}
-                                    </div>
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Số lượng học bổng có sẵn
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            {scholarshipDetail?.quantity}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex gap-[16px] flex-wrap justify-between mb-[20px] c-md:mb-[40px]"
-                                    style={{
-                                        border: "0px solid rgb(229, 231, 235)",
-                                        boxSizing: "border-box",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-between",
-                                        gap: "16px",
-                                        marginBottom: "40px",
-                                    }}
-                                >
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Giá trị học bổng
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            {scholarshipDetail?.fundingMethod}
-                                        </p>
-                                    </div>
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Áp dụng cho kỳ nhập học
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            Liên hệ với trường đại học
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex gap-[16px] flex-wrap justify-between mb-[20px] c-md:mb-[40px]"
-                                    style={{
-                                        border: "0px solid rgb(229, 231, 235)",
-                                        boxSizing: "border-box",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-between",
-                                        gap: "16px",
-                                        marginBottom: "40px",
-                                    }}
-                                >
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Chi tiết học bổng
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            {scholarshipDetail?.value.join(',')}
-                                        </p>
-                                    </div>
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Hình thức học tập
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            {scholarshipDetail?.type}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex gap-[16px] flex-wrap justify-between mb-[20px] c-md:mb-[40px]"
-                                    style={{
-                                        border: "0px solid rgb(229, 231, 235)",
-                                        boxSizing: "border-box",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-between",
-                                        gap: "16px",
-                                        marginBottom: "40px",
-                                    }}
-                                >
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Hình thức tài trợ
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            Không được chỉ định
-                                        </p>
-                                    </div>
-                                    <div
-                                        className="c-md:w-[48%] w-full"
-                                        style={{
-                                            border: "0px solid rgb(229, 231, 235)",
-                                            boxSizing: "border-box",
-                                            width: "48%",
-                                        }}
-                                    >
-                                        <p
-                                            className="font-custom-regular text-grey-darkest c-md:!mb-[8px] !mb-[4px]"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                fontFamily: "BuenosAiresVN, sans-serif",
-                                                fontWeight: 600,
-                                                marginTop: "0px",
-                                                fontSize: "19px",
-                                                lineHeight: 1.5,
-                                                marginBottom: "8px",
-                                            }}
-                                        >
-                                            Hạn chót đăng ký khóa học/ưu đãi
-                                        </p>
-                                        <p
-                                            className="text-grey-darkest"
-                                            style={{
-                                                border: "0px solid rgb(229, 231, 235)",
-                                                boxSizing: "border-box",
-                                                margin: "0px",
-                                                color: "rgb(85 85 85/1)",
-                                                marginBottom: "auto",
-                                                marginTop: "16px",
-                                                fontSize: "16px",
-                                                lineHeight: 1.5,
-                                            }}
-                                        >
-                                            Liên hệ với trường đại học
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex gap-[16px] flex-wrap justify-between mb-[20px] c-md:mb-[40px]"
-                                    style={{
-                                        border: "0px solid rgb(229, 231, 235)",
-                                        boxSizing: "border-box",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-between",
-                                        gap: "16px",
-                                        marginBottom: "40px",
-                                    }}
-                                >
-                                </div>
+                            <div>
+                                <p>{scholarshipDetail?.description}</p>
                             </div>
                         )}
 
