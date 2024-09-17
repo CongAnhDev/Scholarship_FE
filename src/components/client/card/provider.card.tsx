@@ -18,7 +18,7 @@ const ProviderCard = (props: IProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [current, setCurrent] = useState(1);
-    const [pageSize, setPageSize] = useState(3);
+    const [pageSize, setPageSize] = useState(5);
     const [total, setTotal] = useState(0);
     const [filter, setFilter] = useState("");
     // const [sortQuery, setSortQuery] = useState("sort=-updatedAt");

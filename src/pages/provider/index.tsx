@@ -1,6 +1,6 @@
-import { Col, Row } from 'antd';
+import { Col, Divider, Row } from 'antd';
 import styles from 'styles/client.module.scss';
-// import CompanyCard from '@/components/client/card/provider.card';
+import SearchProviderClient from '@/components/client/searchprovider.client';
 import ProviderCard from '@/components/client/card/provider.card';
 
 
@@ -8,6 +8,10 @@ const ClientProviderPage = (props: any) => {
     return (
         <div className={styles["container"]} style={{ marginTop: 20 }}>
             <Row gutter={[20, 20]}>
+            <Col span={24}>
+                    <SearchProviderClient />
+            </Col>
+                <Divider />
                 <Col span={24}>
                     <ProviderCard
                         showPagination={true}

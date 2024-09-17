@@ -34,48 +34,31 @@ const Header = (props: any) => {
         {
             label: (
                 <>
-                    <Link to={'/'}>Các bước để du học</Link>
+                    <Link to={'/Scholarship'}>Tìm Kiếm Học Bổng</Link>
                     <span style={{ margin: '0 8px' }}></span>
                 </>
             ),
-            key: '/event',
-
+            key: '/S',
             // icon: <TwitterOutlined />,
         },
         {
             label: (
                 <>
-                    <Link to={'/event'}>Du Học</Link>
+                    <Link to={'/Provider'}>Tìm Kiếm Đại Học</Link>
                     <span style={{ margin: '0 8px' }}></span>
                 </>
             ),
-            key: '/event',
-            // icon: <TwitterOutlined />,
+            key: '/P',
         },
         {
-            label: (
-                <>
-                    <Link to={'/job'}>Tìm Khóa Học</Link>
-                    <span style={{ margin: '0 8px' }}></span>
-                </>
-            ),
-            key: '/job',
-        },
-        {
-            label: <Link to={'/company'}>IELTS</Link>,
-            key: '/company',
+            label: <Link to={'/register-scholarship'}>Các Bước Để Đăng Ký Học Bổng</Link>,
+            key: '/register-scholarship',
             icon: <RiseOutlined />,
         }
         ,
         {
-            label: <Link to={'/company'}>Dịch Vụ Sinh Viên</Link>,
-            key: '/company',
-            icon: <RiseOutlined />,
-        }
-        ,
-        {
-            label: <Link to={'/company'}>Giới thiệu về SFMS</Link>,
-            key: '/company',
+            label: <Link to={'/SFMS'}>Giới thiệu về SFMS</Link>,
+            key: '/SFMS',
             icon: <RiseOutlined />,
         }
     ];
@@ -125,9 +108,9 @@ const Header = (props: any) => {
     return (
         <>
 
-            <div className={styles["header-section2"]} style={{ display: 'flex', alignItems: 'center'}}>
+            <div className={styles["header-section2"]} style={{ display: 'flex', alignItems: 'center' }}>
                 <div>
-                        
+
                     <img src={`${import.meta.env.VITE_BACKEND_URL}/images/logo/logo.jpg`} alt="Logo" style={{ width: '150px', height: '150px', paddingTop: '30px', paddingLeft: '30px' }} />
                 </div>
                 <div className={styles["container"]}>

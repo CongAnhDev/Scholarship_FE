@@ -16,9 +16,9 @@ export const SKILLS_LIST =
 
 export const LOCATION_LIST =
     [
-        { label: "Hà Nội", value: "HANOI" },
-        { label: "Hồ Chí Minh", value: "HOCHIMINH" },
-        { label: "Đà Nẵng", value: "DANANG" },
+        { label: "Hà Nội", value: "ha noi" },
+        { label: "Hồ Chí Minh", value: "ho chi minh" },
+        { label: "Đà Nẵng", value: "da nang" },
         { label: "Others", value: "OTHER" },
         { label: "Tất cả thành phố", value: "ALL" },
     ];
