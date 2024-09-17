@@ -49,6 +49,7 @@ export interface IProvider {
     info?: string;
     part?: string;
     gallery?: list;
+    background: string;
     createdBy?: string;
     isDeleted?: boolean;
     deletedAt?: boolean | null;
