@@ -41,6 +41,7 @@ export interface IProvider {
     _id?: string;
     name?: string;
     address?: string;
+    city: string;
     logo: string;
     description?: string;
     quantity?: number;

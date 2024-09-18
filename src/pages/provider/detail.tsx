@@ -485,6 +485,42 @@ const ClientProviderDetailPage = (props: any) => {
                                                     marginBottom: "8px",
                                                 }}
                                             >
+                                                Thành Phố
+                                            </p>
+                                            <p
+                                                className="text-heading-6"
+                                                style={{
+                                                    border: "0px solid rgb(229, 231, 235)",
+                                                    boxSizing: "border-box",
+                                                    margin: "0px",
+                                                    fontSize: "18px",
+                                                    lineHeight: 1.3,
+                                                }}
+                                            >
+                                                {ProviderDetail?.city}
+
+                                            </p>
+                                        </div>
+                                        <div
+                                            className="flex flex-col"
+                                            style={{
+                                                border: "0px solid rgb(229, 231, 235)",
+                                                boxSizing: "border-box",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                            }}
+                                        >
+                                            <p
+                                                className="block mb-[4px] c-lg:mb-[8px] font-semibold"
+                                                style={{
+                                                    border: "0px solid rgb(229, 231, 235)",
+                                                    boxSizing: "border-box",
+                                                    margin: "0px",
+                                                    display: "block",
+                                                    fontWeight: 600,
+                                                    marginBottom: "8px",
+                                                }}
+                                            >
                                                 Sinh viên
                                             </p>
                                             <p

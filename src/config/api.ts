@@ -68,7 +68,9 @@ export const callFetchProvider = (query: string) => {
 export const callFetchProviderById = (id: string) => {
     return axios.get<IBackendRes<IProvider>>(`/api/v1/providers/${id}`);
 }
-
+export const callfetchOptions = () => {
+    return axios.get<IBackendRes<IProvider>>(`/api/v1/providers/all-names`);
+}
 
 /**
  * 
